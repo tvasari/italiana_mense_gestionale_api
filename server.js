@@ -5,6 +5,7 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 
 const registrati = require('./controllers/registrati');
+const accedi = require('./controllers/accedi');
 
 const app = express();
 
@@ -24,5 +25,6 @@ app.use(cors());
 
 app.get('/', (req, res) => res.send('works'));
 app.post('/registrati', (req, res) => registrati.handleRegistrati(req, res, db, bcrypt));
+app.post('/accedi', (req, res) => accedi.handleAccedi(req, res, db, bcrypt));
 
 app.listen(3001, () => 'listening on port 3001');
