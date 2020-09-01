@@ -13,7 +13,19 @@ const handleAccedi = (req, res, db, bcrypt) => {
     .select('hash')
     .then(hash => {
       bcrypt.compare(password, hash[0].hash, (err, result) => {
-        err ? console.log(err) : console.log(result)
+        err 
+        ? res.send(err) 
+        : (
+          result 
+          ? res.json({
+            message: 'accesso effettuato',
+            color: 'textPrimary'
+          }) 
+          : res.json({
+            message: 'email o password errati',
+            color: 'error'
+          })
+        );
       })
     })
     .catch(err => res.send(err));
