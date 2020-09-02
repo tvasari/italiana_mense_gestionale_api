@@ -3,8 +3,12 @@ const helmet = require('helmet');
 const knex = require('knex');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv').config();
 
 const registrati = require('./controllers/registrati');
+const conferma = require('./controllers/conferma');
 const accedi = require('./controllers/accedi');
 
 const app = express();
@@ -24,7 +28,8 @@ app.use(express.json());
 app.use(cors());
 
 app.get('/', (req, res) => res.send('works'));
-app.post('/registrati', (req, res) => registrati.handleRegistrati(req, res, db, bcrypt));
+app.post('/registrati', (req, res) => registrati.handleRegistrati(req, res, db, bcrypt, nodemailer, jwt));
 app.post('/accedi', (req, res) => accedi.handleAccedi(req, res, db, bcrypt));
+app.get('/conferma/:token', (req, res) => conferma.handleConferma(req, res, db, jwt));
 
 app.listen(3001, () => 'listening on port 3001');

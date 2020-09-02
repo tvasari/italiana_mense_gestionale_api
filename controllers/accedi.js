@@ -9,26 +9,35 @@ const handleAccedi = (req, res, db, bcrypt) => {
   }
 
   db('utente')
-    .where({ indirizzo_email: email })
-    .select('hash')
-    .then(hash => {
-      bcrypt.compare(password, hash[0].hash, (err, result) => {
-        err 
-        ? res.send(err) 
-        : (
-          result 
-          ? res.json({
-            message: 'accesso effettuato',
-            color: 'textPrimary'
-          }) 
-          : res.json({
-            message: 'email o password errati',
+    .select('indirizzo_email', 'hash', 'confermato')
+    .where(db.raw('?? = ?', ['indirizzo_email', email]))
+    .then(utente => {
+      (utente.length > 0)
+      ? (utente[0].confermato)
+        ? (bcrypt.compare(password, utente[0].hash, (err, result) => {
+            (err) 
+            ? (res.send(err.message)) 
+            : (result 
+              ? (res.json({
+                  message: 'accesso effettuato',
+                  color: 'textPrimary'
+                }))
+              : (res.json({
+                  message: 'email o password errati',
+                  color: 'error'
+                }))
+              )
+          }))
+        : (res.status(400).json({
+            message: "conferma l'email del tuo account per accedere",
             color: 'error'
-          })
-        );
-      })
+          }))
+      : (res.status(400).json({
+          message: "l'indirizzo email che hai inserito non è ancora associato ad un account",
+          color: 'error'
+        }))
     })
-    .catch(err => res.send(err));
+    .catch(err => res.send(err.message));
 
 }
 

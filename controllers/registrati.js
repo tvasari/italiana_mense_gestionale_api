@@ -1,4 +1,4 @@
-const handleRegistrati = (req, res, db, bcrypt) => {
+const handleRegistrati = (req, res, db, bcrypt, nodemailer, jwt) => {
   const { nome, cognome, email, password } = req.body;
 
   if (!nome || !cognome || !email || !password) {
@@ -7,6 +7,34 @@ const handleRegistrati = (req, res, db, bcrypt) => {
         color: 'error'
       });
   }
+
+  const emailToken = jwt.sign(email, "@_CuriousDrawer60");
+
+  let url = `http://localhost:3001/conferma/${emailToken}`;
+
+  async function main() {
+    let transporter = nodemailer.createTransport({
+      host: "smtp.dreamhost.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.USER,
+        pass: process.env.PASS
+      }
+    })
+
+    let info = await transporter.sendMail({
+      from: '"Tommaso" <tommasovasari@tommasovasari.com>',
+      to: email,
+      subject: 'Italiana Mense Gestionale',
+      html: `Clicca sul link per confermare la tua email: <a href=${url}>${url}</a>`
+    })
+
+    console.log("Messaggio inviato: %s", info.messageId);
+
+  }
+ 
+  main().catch(console.error);
 
   const saltRounds = 10;
 
