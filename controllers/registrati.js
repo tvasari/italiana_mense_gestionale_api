@@ -8,6 +8,7 @@ const handleRegistrati = (req, res, db, bcrypt, nodemailer, jwt) => {
       });
   }
 
+  const saltRounds = 10;
   const emailToken = jwt.sign(email, "@_CuriousDrawer60");
 
   let url = `http://localhost:3001/conferma/${emailToken}`;
@@ -35,8 +36,6 @@ const handleRegistrati = (req, res, db, bcrypt, nodemailer, jwt) => {
   }
  
   main().catch(console.error);
-
-  const saltRounds = 10;
 
   db.select('indirizzo_email')
     .from('utente')

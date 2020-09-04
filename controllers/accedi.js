@@ -18,11 +18,11 @@ const handleAccedi = (req, res, db, bcrypt) => {
             (err) 
             ? (res.send(err.message)) 
             : (result 
-              ? (res.json({
-                  message: 'accesso effettuato',
+              ? (res.status(200).json({
+                  message: req.session.nome,
                   color: 'textPrimary'
                 }))
-              : (res.json({
+              : (res.status(400).json({
                   message: 'email o password errati',
                   color: 'error'
                 }))
