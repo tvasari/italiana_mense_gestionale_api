@@ -19,7 +19,7 @@ const handleAccedi = (req, res, db, bcrypt) => {
             ? (res.send(err.message)) 
             : (result 
               ? (res.status(200).json({
-                  message: req.session.nome,
+                  message: `${req.session.name} ${req.session.surname}`,
                   color: 'textPrimary'
                 }))
               : (res.status(400).json({

@@ -33,14 +33,17 @@ app.use(session({
   resave: false
 }))
 app.use((req, res, next) => {
+  console.log(req.body.email)
   db('utente')
-    .where({indirizzo_email: req.body.email})
-    .select("nome")
+    .select("nome", "cognome")
+    .where("indirizzo_email", req.body.email)
     .then(matches => {
       if (matches.length > 0) {
-        req.session.nome = matches[0].nome
+        req.session.name = matches[0].nome
+        req.session.surname = matches[0].cognome
       }
     })
+    .catch(err => console.log("errore durante l'aggiornameto della sessione", err))
     
   next();
 })
