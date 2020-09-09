@@ -33,7 +33,6 @@ app.use(session({
   resave: false
 }))
 app.use((req, res, next) => {
-  console.log(req.body.email)
   db('utente')
     .select("nome", "cognome")
     .where("indirizzo_email", req.body.email)
