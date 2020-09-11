@@ -9,7 +9,7 @@ const handleAccedi = (req, res, db, bcrypt) => {
   }
 
   db('utente')
-    .select('indirizzo_email', 'hash', 'confermato')
+    .select('indirizzo_email', 'hash', 'confermato', 'nome', 'cognome')
     .where(db.raw('?? = ?', ['indirizzo_email', email]))
     .then(utente => {
       (utente.length > 0)
@@ -17,15 +17,20 @@ const handleAccedi = (req, res, db, bcrypt) => {
         ? (bcrypt.compare(password, utente[0].hash, (err, result) => {
             (err) 
             ? (res.send(err.message)) 
-            : (result 
-              ? (res.status(200).json({
-                  message: `${req.session.name} ${req.session.surname}`,
-                  color: 'textPrimary'
-                }))
-              : (res.status(400).json({
-                  message: 'email o password errati',
-                  color: 'error'
-                }))
+            : (
+                (result) 
+                ? (
+                    req.session.name = utente[0].nome,
+                    req.session.surname = utente[0].cognome,
+                    res.status(200).json({
+                      message: `${req.session.name} ${req.session.surname}`,
+                      color: 'textPrimary'
+                    })
+                  )
+                : (res.status(400).json({
+                    message: 'email o password errati',
+                    color: 'error'
+                  }))
               )
           }))
         : (res.status(400).json({

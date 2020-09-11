@@ -32,30 +32,13 @@ app.use(session({
   saveUninitialized: false,
   resave: false
 }))
-app.use((req, res, next) => {
-  db('utente')
-    .select("nome", "cognome")
-    .where("indirizzo_email", req.body.email)
-    .then(matches => {
-      if (matches.length > 0) {
-        req.session.name = matches[0].nome
-        req.session.surname = matches[0].cognome
-      }
-    })
-    .catch(err => console.log("errore durante l'aggiornameto della sessione", err))
-    
-  next();
-})
 
 app.get('/', (req, res) => res.send('works'));
 app.post('/registrati', (req, res) => registrati.handleRegistrati(req, res, db, bcrypt, nodemailer, jwt));
 app.post('/accedi', (req, res) => accedi.handleAccedi(req, res, db, bcrypt));
 app.get('/conferma/:token', (req, res) => conferma.handleConferma(req, res, db, jwt));
 app.get('/esci', (req, res) => req.session.destroy(err => {
-  if (err) {
-    return console.log(err)
-  }
-  res.send('Sessione conclusa')
+  err ? res.send(err) : res.send('Sessione conclusa');
 }))
 
 app.listen(3001, () => 'listening on port 3001');
