@@ -40,5 +40,10 @@ app.get('/conferma/:token', (req, res) => conferma.handleConferma(req, res, db, 
 app.get('/esci', (req, res) => req.session.destroy(err => {
   err ? res.send(err) : res.send('Sessione conclusa');
 }))
+app.get('/presenze', (req, res) => {
+  db('presenze')
+    .select('*')
+    .then(data => res.json(data))
+})
 
 app.listen(3001, () => 'listening on port 3001');
