@@ -43,7 +43,7 @@ app.get('/esci', (req, res) => req.session.destroy(err => {
 app.get('/presenze', (req, res) => {
   db('presenze')
     .select('*')
-    .then(data => res.json(data))
+    .then(presenze => res.json(presenze))
 })
 
 app.listen(3001, () => 'listening on port 3001');
