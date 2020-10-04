@@ -15,12 +15,12 @@ const accedi = require('./controllers/accedi');
 const app = express();
 
 const db = knex({
-  client: 'pg',
+  client: 'mysql',
   connection: {
     host: '127.0.0.1',
-    user: 'postgres',
-    password: 'test',
-    database: 'italiana_mense'
+    user: 'tommaso',
+    password: '@Az6569000',
+    database: 'italiana_mense_db'
   }
 })
 
@@ -41,9 +41,7 @@ app.get('/esci', (req, res) => req.session.destroy(err => {
   err ? res.send(err) : res.send('Sessione conclusa');
 }))
 app.get('/presenze', (req, res) => {
-  db('presenze')
-    .select('*')
-    .then(presenze => res.json(presenze))
+  // Generate join query
 })
 
 app.listen(3001, () => 'listening on port 3001');

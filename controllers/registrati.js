@@ -19,8 +19,8 @@ const handleRegistrati = (req, res, db, bcrypt, nodemailer, jwt) => {
       port: 465,
       secure: true,
       auth: {
-        user: process.env.USER,
-        pass: process.env.PASS
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS
       }
     })
 
@@ -50,7 +50,7 @@ const handleRegistrati = (req, res, db, bcrypt, nodemailer, jwt) => {
         }) 
       : bcrypt.hash(password, saltRounds, (err, hash) => {
           db('utente')
-            .returning('id_utente')
+            .returning('id_utente') //.returning() is not supported by mysql and will not have any effect
             .insert({
               nome: nome,
               cognome: cognome,
